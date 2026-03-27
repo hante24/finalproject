@@ -1,16 +1,17 @@
-{% if user %}
-
-    <a
-            type="button"        class="btn btn-primary"        href="{{ url_for('logout') }}">
-        {{ user.name }}, ви можете розлогуватися
-    </a>
-{% else %}
-    <a
-            type="button"        class="btn btn-primary  test-style"        href="{{ url_for('user_register') }}">
-        Зареєструватися
-    </a>
-    <a
-            type="button"        class="btn btn-primary"        href="{{ url_for('login') }}">
-        Логін
-    </a>
-{% endif %}
+<div class="auth-component p-4 shadow-sm border rounded bg-white">
+    <h4 class="mb-3 fw-bold text-center">Аккаунт SportShop</h4>
+    {% if user %}
+        <div class="text-center">
+            <p class="mb-2">Ви ввійшли як <strong>{{ user.username }}</strong></p>
+            <div class="d-grid gap-2">
+                <a href="/orders" class="btn btn-outline-dark">Мої замовлення</a>
+                <a href="/logout" class="btn btn-danger">Выйти</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="d-grid gap-2">
+            <a href="/login" class="btn btn-primary">Вход в кабінет</a>
+            <a href="/sign-up" class="btn btn-outline-primary">Створити аккаунт</a>
+        </div>
+    {% endif %}
+</div>

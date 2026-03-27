@@ -1,32 +1,29 @@
 {% extends "base.html" %}
-
 {% block content %}
-
-<div class="m-4 container-sm">
-
-<h2>Логін користувача</h2>
-
-  {% if error %}
-    <div class="alert alert-danger" role="alert">
-      {{ error }}
+<div class="container my-5 py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-5">
+          <h2 class="text-center mb-4 fw-bold">ВХОД</h2>
+          <form method="post">
+            <div class="mb-3">
+              <label class="form-label">Email або логін</label>
+              <input type="text" name="username" class="form-control" placeholder="example@mail.com" required>
+            </div>
+            <div class="mb-4">
+              <label class="form-label">Пароль</label>
+              <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">ВВІЙТИ</button>
+          </form>
+          <hr class="my-4">
+          <p class="text-center mb-0 text-muted">
+            Нема аккаунту? <a href="/sign-up" class="text-decoration-none">Зареєструватися</a>
+          </p>
+        </div>
+      </div>
     </div>
-  {% endif %}
-
-  <form method="post" action="{{ url_for('login') }}">
-
-    <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
-      <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required value="{{ email }}">
-    </div>
-
-    <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Password</label>
-      <input name="password" type="password" class="form-control" id="exampleInputPassword1" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Логін</button>
-  </form>
-
+  </div>
 </div>
-
 {% endblock %}

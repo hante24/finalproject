@@ -1,37 +1,39 @@
 {% extends "base.html" %}
-
 {% block content %}
-
-<div class="m-4 container-sm">
-
-<h2>Реєстрація нового користувача</h2>
-
-  {% if error %}
-    <div class="alert alert-danger" role="alert">
-      {{ error }}
+<div class="container my-5 py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-5">
+          <h2 class="text-center mb-4 fw-bold">РЕЄСТРАЦІЯ</h2>
+          <form method="post">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <label class="form-label">Повне ім'я</label>
+                <input type="text" name="full_name" class="form-control" placeholder="Іван Іванов" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Електронна пошта</label>
+              <input type="email" name="email" class="form-control" placeholder="example@mail.com" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Вигадайте пароль</label>
+              <input type="password" name="password" class="form-control" placeholder="Мінімум 8 символів" required>
+            </div>
+            <div class="mb-4 form-check">
+              <input type="checkbox" class="form-check-input" id="terms" required>
+              <label class="form-check-label small" for="terms">Я згоден з правилами магазину і обробкою данних</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">СТВОРИТИ АККАУНТ</button>
+          </form>
+          <p class="text-center mt-4 mb-0 text-muted">
+            Вже є профіль? <a href="/login" class="text-decoration-none">Ввійти</a>
+          </p>
+        </div>
+      </div>
     </div>
-  {% endif %}
-
-  <form method="post" action="{{ url_for('user_register') }}">
-      <div class="mb-3">
-      <label for="exampleInputUserName" class="form-label">Username</label>
-      <input name="username" type="text" class="form-control" id="exampleInputUserName" required minlength="3" value="{{ username }}">
-    </div>
-
-    <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
-      <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required value="{{ email }}">
-      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-    </div>
-
-    <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Password</label>
-      <input name="password" type="password" class="form-control" id="exampleInputPassword1" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Зареєструватися</button>
-  </form>
-
+  </div>
 </div>
-
 {% endblock %}
+

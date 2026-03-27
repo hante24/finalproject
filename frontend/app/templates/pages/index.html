@@ -1,81 +1,32 @@
 {% extends "base.html" %}
-
 {% block content %}
-
 <section class="hero-section">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="fade-in">Спортивні товари для чемпіонів</h1>
-                <p class="fade-in">Найкраще спорядження для ваших тренувань та змагань</p>
-                <a href="/catalog" class="btn btn-primary btn-lg">Переглянути каталог</a>
-            </div>
-        </div>
-    </div>
+  <div class="container">
+    <h1> SPORTSHOP</h1>
+    <p class="lead">Найкращі спортивні товари для професіоналів</p>
+    <a href="/catalog" class="btn btn-primary btn-lg">КАТАЛОГ</a>
+  </div>
 </section>
-
-<section class="products-section">
-    <div class="container">
-        <h2 class="section-title">Популярні товари</h2>
-        
-        {% if products %}
-        <div class="row">
-            {% for product in products[:8] %}
-            <div class="col-md-6 col-lg-3">
-                <div class="product-card fade-in">
-                    <div class="product-image">
-                        <a href="/product/{{ product.uuid_id }}">
-                            <img src="{{ product.main_image }}" alt="{{ product.title }}">
-                        </a>
-                        {% if product.discount_price %}
-                        <span class="product-badge">-{{ ((product.price - product.discount_price) * 100 / product.price)|int }}%</span>
-                        {% endif %}
-                    </div>
-                    <div class="product-body">
-                        {% if product.category %}
-                        <div class="product-category">{{ product.category.title }}</div>
-                        {% endif %}
-                        <h5 class="product-title">
-                            <a href="/product/{{ product.uuid_id }}" style="text-decoration: none; color: inherit;">
-                                {{ product.title }}
-                            </a>
-                        </h5>
-                        <div class="product-footer">
-                            <div class="product-price">
-                                <span class="price-current">₴{{ product.discount_price or product.price }}</span>
-                                {% if product.discount_price %}
-                                <span class="price-old">₴{{ product.price }}</span>
-                                {% endif %}
-                            </div>
-                            {% if user %}
-                            <form method="post" action="/cart/add" style="display: inline;">
-                                <input type="hidden" name="product_id" value="{{ product.id }}">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="btn-add-cart">Купити</button>
-                            </form>
-                            {% else %}
-                            <a href="/login" class="btn-add-cart" style="text-decoration: none; display: inline-block;">Увійти</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+<div class="container">
+  <h2 class="section-title">Популярні товари</h2>
+  <div class="row">
+    {% for product in products[:8] %}
+    <div class="col-md-3 mb-4">
+      <div class="product-card">
+        <div class="product-image position-relative">
+          <a href="/product/{{product.id}}"><img src="{{product.main_image}}" alt="{{product.title}}"></a>
+          {% if product.discount_price %}<span class="product-badge">-{{((product.price-product.discount_price)*100/product.price)|int}}%</span>{% endif %}
         </div>
-        {% else %}
-        <div class="empty-state">
-            <div class="empty-state-icon">🏃</div>
-            <h3>Товари скоро з'являться</h3>
-            <p>Ми працюємо над наповненням каталогу</p>
+        <div class="product-body">
+          <h5 class="product-title"><a href="/product/{{product.id}}" style="text-decoration:none;color:inherit">{{product.title}}</a></h5>
+          <div class="product-footer">
+            <div><span class="price-current">₴{{product.discount_price or product.price}}</span>{% if product.discount_price %}<span class="price-old">₴{{product.price}}</span>{% endif %}</div>
+            {% if user %}<form method="post" action="/cart/add"><input type="hidden" name="product_id" value="{{product.id}}"><input type="hidden" name="quantity" value="1"><button type="submit" class="btn-add-cart">КУПИТИ</button></form>{% else %}<a href="/login" class="btn-add-cart">ВХІД</a>{% endif %}
+          </div>
         </div>
-        {% endif %}
-
-        {% if products|length > 8 %}
-        <div class="text-center mt-5">
-            <a href="/catalog" class="btn btn-primary btn-lg">Дивитись всі товари</a>
-        </div>
-        {% endif %}
+      </div>
     </div>
-</section>
-
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
