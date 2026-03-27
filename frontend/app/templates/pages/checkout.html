@@ -2,19 +2,19 @@
 {% block content %}
 <div class="container my-5">
     <h2 class="mb-4">Оформлення замовлення</h2>
-    <form method="post" action="/orders/create" class="row">
+    <form method="post" action="/checkout" class="row">
         <div class="col-md-7">
             <div class="cart-summary mb-4">
                 <h4>Контактні дані</h4>
                 <div class="row g-3 mt-2">
                     <div class="col-md-6">
-                        <input type="text" name="full_name" class="form-control" placeholder="Прізвище та Ім'я" required>
+                        <input type="text" name="customer_name" class="form-control" placeholder="Прізвище та Ім'я" required>
                     </div>
                     <div class="col-md-6">
                         <input type="tel" name="phone" class="form-control" placeholder="Телефон" required>
                     </div>
                     <div class="col-12">
-                        <input type="text" name="address" class="form-control" placeholder="Адреса доставки (місто, склад Нової Пошти)" required>
+                        <input type="text" name="delivery_address" class="form-control" placeholder="Адреса доставки (місто, склад Нової Пошти)" required>
                     </div>
                 </div>
             </div>

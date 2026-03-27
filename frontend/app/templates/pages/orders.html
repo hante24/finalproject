@@ -17,8 +17,8 @@
                 {% for order in orders %}
                 <tr>
                     <td>#{{ order.id }}</td>
-                    <td>{{ order.created_at }}</td>
-                    <td class="fw-bold">₴{{ order.total_price }}</td>
+                    <td>{{ order.created_at[:10] }} {{ order.created_at[11:16] }}</td>
+                    <td class="fw-bold">₴{{ order.total_amount }}</td>
                     <td><span class="badge bg-primary">{{ order.status }}</span></td>
                 </tr>
                 {% endfor %}
