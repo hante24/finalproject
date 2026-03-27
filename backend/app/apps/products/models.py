@@ -1,4 +1,4 @@
-from backend.app.apps.core.base_model import Base
+from apps.core.base_model import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy import String, Integer, ForeignKey, Float, Text
@@ -38,7 +38,7 @@ class Cart(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     
     user = relationship("User", back_populates="cart")
-    items = relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
+    cart_items = relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
 
 
 class CartItem(Base):

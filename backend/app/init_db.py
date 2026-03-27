@@ -2,12 +2,14 @@ import asyncio
 from apps.core.base_model import async_session_maker
 from apps.products.crud import category_manager, product_manager
 import uuid
+from apps.users.models import User
+from apps.products.models import Category, Product, Cart
 
 
 async def init_database():
     
     async with async_session_maker() as session:
-        print("🚀 Починаємо ініціалізацію бази даних...")
+        print(" Починаємо ініціалізацію бази даних...")
 
         categories_data = [
             {
@@ -53,9 +55,9 @@ async def init_database():
             try:
                 category = await category_manager.create_category(session, **cat_data)
                 categories.append(category)
-                print(f"✅ Створено категорію: {cat_data['title']}")
+                print(f" Створено категорію: {cat_data['title']}")
             except Exception as e:
-                print(f"⚠️  Категорія {cat_data['title']} вже існує або помилка: {e}")
+                print(f"  Категорія {cat_data['title']} вже існує або помилка: {e}")
 
         products_data = [
             {
@@ -187,13 +189,13 @@ async def init_database():
                     uuid_id=uuid.uuid4(),
                     **prod_data
                 )
-                print(f"✅ Створено товар: {prod_data['title']}")
+                print(f" Створено товар: {prod_data['title']}")
             except Exception as e:
-                print(f"⚠️  Товар {prod_data['title']} вже існує або помилка: {e}")
+                print(f"️  Товар {prod_data['title']} вже існує або помилка: {e}")
         
-        print("\n🎉 Ініціалізація завершена успішно!")
-        print("📊 Створено категорій:", len(categories_data))
-        print("📦 Створено товарів:", len(products_data))
+        print("\n Ініціалізація завершена успішно!")
+        print(" Створено категорій:", len(categories_data))
+        print(" Створено товарів:", len(products_data))
 
 
 if __name__ == "__main__":
