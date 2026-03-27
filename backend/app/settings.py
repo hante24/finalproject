@@ -1,26 +1,15 @@
 from pydantic_settings import BaseSettings
 
 
-class DatabaseSettings(BaseSettings):
-    PGHOST: str
-    PGDATABASE: str
-    PGUSER: str
-    PGPASSWORD: str
-    PGPORT: int = 5432
+class Settings(BaseSettings):
+    DATABASE_URL: str = "postgresql+asyncpg://sportshop:sportshop123@db:5432/sportshop"
+    DEBUG: bool = True
+    SECRET_KEY: str = "super-secret-key-change-in-production-2024"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
-    @property
-    def DATABASE_URL(self) -> str:
-        return (f'postgresql+asyncpg://{self.PGUSER}:{self.PGPASSWORD}@{self.PGHOST}:{self.PGPORT}/{self.PGDATABASE}')
-
-
-class JWT(BaseSettings):
-    JWT_SECRET: str
-    JWT_ALGORITHM: str
-
-
-class Settings(DatabaseSettings, JWT):
-    DEBUG: bool = False
+    class Config:
+        env_file = ".env"
 
 
 settings = Settings()
-

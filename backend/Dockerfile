@@ -2,19 +2,20 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir \
+    fastapi==0.109.0 \
+    uvicorn[standard]==0.27.0 \
+    sqlalchemy==2.0.25 \
+    alembic==1.13.1 \
+    asyncpg==0.29.0 \
+    psycopg2-binary==2.9.9 \
+    pydantic==2.5.3 \
+    pydantic-settings==2.1.0 \
+    python-jose[cryptography]==3.3.0 \
+    passlib[bcrypt]==1.7.4 \
+    python-multipart==0.0.6 \
+    httpx==0.26.0
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
-    && mv /root/.local/bin/uv /usr/local/bin/uv \
-    && mv /root/.local/bin/uvx /usr/local/bin/uvx
+COPY ./app /app
 
-COPY pyproject.toml uv.lock /app/
-RUN uv pip install --system --no-cache .
-
-COPY /app /app
-
-EXPOSE 8000
-
-CMD ["uv", "run", "-m","uvicorn", "main:app"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

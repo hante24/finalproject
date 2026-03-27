@@ -1,17 +1,23 @@
 from fastapi import FastAPI
-
-from apps.products.routers import product_router
+from fastapi.middleware.cors import CORSMiddleware
 from apps.users.routers import users_router
-from settings import settings
+from apps.products.routers import product_router
 
 
-def get_application() -> FastAPI:
-    _app = FastAPI(
-        debug=settings.DEBUG
-    )
-    _app.include_router(users_router, prefix='/users', tags=['Users'])
-    _app.include_router(product_router, prefix='/products', tags=['Products'])
-    return _app
+app = FastAPI(title="SportShop API", debug=True)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(users_router, prefix='/users', tags=['Users'])
+app.include_router(product_router, prefix='/products', tags=['Products'])
 
 
-app = get_application()
+@app.get("/")
+async def root():
+    return {"message": "SportShop API is running"}
