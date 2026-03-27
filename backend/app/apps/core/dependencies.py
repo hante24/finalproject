@@ -15,10 +15,12 @@ async def get_session():
 
 async def get_current_user(
         token: str = Depends(oauth2_schema),
-        session = Depends(get_session)
+        session=Depends(get_session)
 ) -> User:
-    payload = await auth_handler.decode_token(token)
-    user = await user_manager.get(session, payload['sub'])
+    payload = auth_handler.decode_token(token)
+
+    user = await user_manager.get(session, int(payload['sub']))
+
     if not user:
-        raise HTTPException(detail="User not authorized", status_code=status.HTTP_401_UNAUTHORIZED)
+        raise HTTPException(detail="User not authorized",status_code=status.HTTP_401_UNAUTHORIZED)
     return user

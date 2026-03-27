@@ -11,10 +11,7 @@ services:
       - "19999:8000"
     env_file:
       - .env
-    command: |
-      sh -c "
-      uv run -m uvicorn main:app --host "0.0.0.0" --reload 
-      "
+    command: python -m uvicorn main:app --host 0.0.0.0 --port 8000
     networks:
       - main_network
 
@@ -27,14 +24,23 @@ services:
     volumes:
       - ./frontend/app:/app
     ports:
-      - "20000:8000"
-    command: |
-      sh -c "
-      uv run -m uvicorn main:app --host "0.0.0.0" --reload 
-      "
+      - "20000:8001"
+    command: python -m uvicorn main:app --host 0.0.0.0 --port 8001
+    networks:
+      - main_network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: sportshop
+      POSTGRES_PASSWORD: sportshop123
+      POSTGRES_DB: sportshop
+    ports:
+      - "5432:5432"
     networks:
       - main_network
 
 networks:
   main_network:
     driver: bridge
+

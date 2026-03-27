@@ -1,18 +1,15 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-
+from fastapi.templating import Jinja2Templates
 from routers import router
 
+app = FastAPI(title="SportShop", debug=True)
 
-def get_application() -> FastAPI:
-    _app = FastAPI(
-        debug=True
-    )
-    _app.include_router(router)
+app.mount('/static', StaticFiles(directory="static"), name='static')
+app.include_router(router)
 
-    _app.mount('/static', StaticFiles(directory="static"), name='static')
+templates = Jinja2Templates(directory='templates')
 
-    return _app
-
-
-app = get_application()
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)
