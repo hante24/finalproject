@@ -1,11 +1,13 @@
-from fastapi import APIRouter, status, Depends, Form, UploadFile, File, HTTPException
-from backend.app.apps.core.dependencies import get_session, get_current_user
-from backend.app.apps.products.crud import product_manager, category_manager, cart_manager, order_manager
-from backend.app.apps.products.s3 import s3_service
+from fastapi import APIRouter, status, Depends, Form, UploadFile, File, HTTPException, Request
+from apps.core.dependencies import get_session, get_current_user
+from apps.products.crud import product_manager, category_manager, cart_manager, order_manager
+from apps.products.s3 import s3_service
 from typing import List
+from starlette.templating import Jinja2Templates
 import uuid
 
 product_router = APIRouter()
+templates = Jinja2Templates(directory="templates")
 
 
 @product_router.post('/categories/create', status_code=status.HTTP_201_CREATED)
@@ -91,13 +93,21 @@ async def get_products(
     return products
 
 
-@product_router.get('/cart/my', dependencies=[Depends(get_current_user)])
-async def get_my_cart(
-    current_user=Depends(get_current_user),
-    session=Depends(get_session)
+@product_router.get("/cart")
+async def get_cart_page(
+    request: Request,
+    session=Depends(get_session),
+    user=Depends(get_current_user)
 ):
-    cart = await cart_manager.get_or_create_cart(session=session, user_id=current_user.id)
-    return cart
+    if not user:
+         raise HTTPException(status_code=401)
+
+    cart = await cart_manager.get_or_create_cart(session, user.id)
+
+    return templates.TemplateResponse("pages/cart.html", {
+        "request": request,
+        "cart": cart
+    })
 
 
 @product_router.post('/cart/add', status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_current_user)])
@@ -155,7 +165,6 @@ async def clear_cart(
     return {"message": "Кошик очищено"}
 
 
-# ============= ORDERS =============
 @product_router.post('/orders/create', status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_current_user)])
 async def create_order(
     delivery_address: str = Form(),
@@ -164,7 +173,6 @@ async def create_order(
     current_user=Depends(get_current_user),
     session=Depends(get_session)
 ):
-    """Створити замовлення з кошика"""
     order = await order_manager.create_order(
         session=session,
         user_id=current_user.id,

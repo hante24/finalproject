@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+    <h1 class="section-title mb-4">Оформлення замовлення</h1>
+
+    <div class="row">
+        <!-- Checkout Form -->
+        <div class="col-lg-7">
+            <div class="checkout-form">
+                <h3 class="mb-4">Контактна інформація</h3>
+                <form method="post" action="/checkout">
+                    <div class="mb-3">
+                        <label for="customer_name" class="form-label">Повне ім'я</label>
+                        <input type="text" class="form-control" id="customer_name" name="customer_name" 
+                               value="{{ user.name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Телефон</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" 
+                               placeholder="+380 XX XXX XX XX" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="delivery_address" class="form-label">Адреса доставки</label>
+                        <textarea class="form-control" id="delivery_address" name="delivery_address" 
+                                  rows="3" required>{{ user.address or '' }}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-checkout">Підтвердити замовлення</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-5">
+            <div class="cart-summary">
+                <h3>Ваше замовлення</h3>
+                {% for item in cart.items %}
+                <div class="d-flex justify-content-between mb-2">
+                    <span>{{ item.product.title }} × {{ item.quantity }}</span>
+                    <span>₴{{ (item.product.discount_price or item.product.price) * item.quantity }}</span>
+                </div>
+                {% endfor %}
+                <div class="summary-row total mt-3">
+                    <span>Всього:</span>
+                    <span>₴{{ total }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

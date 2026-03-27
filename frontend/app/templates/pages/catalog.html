@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+    <h1 class="section-title mb-4">Каталог товарів</h1>
+    
+    <!-- Search and Filters -->
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <form method="get" action="/catalog" class="d-flex gap-3">
+                <input type="text" name="q" class="form-control" placeholder="Пошук товарів..." value="{{ search_query or '' }}">
+                <select name="category_id" class="form-select" onchange="this.form.submit()">
+                    <option value="">Всі категорії</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>
+                        {{ category.icon }} {{ category.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Шукати</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    {% if products %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="product-card">
+                <div class="product-image">
+                    <a href="/product/{{ product.uuid_id }}">
+                        <img src="{{ product.main_image }}" alt="{{ product.title }}">
+                    </a>
+                    {% if product.discount_price %}
+                    <span class="product-badge">-{{ ((product.price - product.discount_price) * 100 / product.price)|int }}%</span>
+                    {% endif %}
+                </div>
+                <div class="product-body">
+                    {% if product.category %}
+                    <div class="product-category">{{ product.category.title }}</div>
+                    {% endif %}
+                    <h5 class="product-title">
+                        <a href="/product/{{ product.uuid_id }}" style="text-decoration: none; color: inherit;">
+                            {{ product.title }}
+                        </a>
+                    </h5>
+                    <div class="product-footer">
+                        <div class="product-price">
+                            <span class="price-current">₴{{ product.discount_price or product.price }}</span>
+                            {% if product.discount_price %}
+                            <span class="price-old">₴{{ product.price }}</span>
+                            {% endif %}
+                        </div>
+                        {% if user %}
+                        <form method="post" action="/cart/add">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn-add-cart">Купити</button>
+                        </form>
+                        {% else %}
+                        <a href="/login" class="btn-add-cart" style="text-decoration: none; display: inline-block;">Увійти</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h3>Товари не знайдено</h3>
+        <p>Спробуйте змінити параметри пошуку</p>
+        <a href="/catalog" class="btn btn-primary mt-3">Скинути фільтри</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

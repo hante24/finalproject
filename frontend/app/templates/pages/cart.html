@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+    <h1 class="section-title mb-4">Кошик</h1>
+
+    {% if cart.cart_items %}
+    {% for item in cart.cart_items %}
+        <img src="{{ item.product.main_image }}">
+    {% endfor %}
+{% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="cart-summary">
+                <h3>Підсумок</h3>
+                <div class="summary-row">
+                    <span>Товарів:</span>
+                    <span>{{ cart.items|length }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Всього:</span>
+                    <span>₴{{ total }}</span>
+                </div>
+                <a href="/checkout" class="btn-checkout">Оформити замовлення</a>
+                <a href="/catalog" class="btn btn-outline-secondary w-100 mt-2">Продовжити покупки</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">🛒</div>
+        <h3>Ваш кошик порожній</h3>
+        <p>Додайте товари до кошика, щоб продовжити</p>
+        <a href="/catalog" class="btn btn-primary btn-lg mt-3">До каталогу</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -2,21 +2,80 @@
 
 {% block content %}
 
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="fade-in">Спортивні товари для чемпіонів</h1>
+                <p class="fade-in">Найкраще спорядження для ваших тренувань та змагань</p>
+                <a href="/catalog" class="btn btn-primary btn-lg">Переглянути каталог</a>
+            </div>
+        </div>
+    </div>
+</section>
 
-<div class="container-fluid row row-cols-1 row-cols-md-4 g-4">
+<section class="products-section">
+    <div class="container">
+        <h2 class="section-title">Популярні товари</h2>
+        
+        {% if products %}
+        <div class="row">
+            {% for product in products[:8] %}
+            <div class="col-md-6 col-lg-3">
+                <div class="product-card fade-in">
+                    <div class="product-image">
+                        <a href="/product/{{ product.uuid_id }}">
+                            <img src="{{ product.main_image }}" alt="{{ product.title }}">
+                        </a>
+                        {% if product.discount_price %}
+                        <span class="product-badge">-{{ ((product.price - product.discount_price) * 100 / product.price)|int }}%</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-body">
+                        {% if product.category %}
+                        <div class="product-category">{{ product.category.title }}</div>
+                        {% endif %}
+                        <h5 class="product-title">
+                            <a href="/product/{{ product.uuid_id }}" style="text-decoration: none; color: inherit;">
+                                {{ product.title }}
+                            </a>
+                        </h5>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">₴{{ product.discount_price or product.price }}</span>
+                                {% if product.discount_price %}
+                                <span class="price-old">₴{{ product.price }}</span>
+                                {% endif %}
+                            </div>
+                            {% if user %}
+                            <form method="post" action="/cart/add" style="display: inline;">
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn-add-cart">Купити</button>
+                            </form>
+                            {% else %}
+                            <a href="/login" class="btn-add-cart" style="text-decoration: none; display: inline-block;">Увійти</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">🏃</div>
+            <h3>Товари скоро з'являться</h3>
+            <p>Ми працюємо над наповненням каталогу</p>
+        </div>
+        {% endif %}
 
-{% for product in products %}
-<div class="card" style="width: 18rem;">
-  <img src="{{ product.main_image }}" class="card-img-top" alt="..." width="50px">
-  <div class="card-body">
-    <h5 class="card-title">{{ product.title }}</h5>
-    <p class="card-text">{{ product.description|truncate(30, true) }}</p>
-    <p class="card-text">{{ product.price}} грн</p>
-    <a href="{{ url_for('product_detail', product_uuid=product.uuid_id) }}" class="btn btn-primary">Details</a>
-  </div>
-</div>
-{% endfor %}
+        {% if products|length > 8 %}
+        <div class="text-center mt-5">
+            <a href="/catalog" class="btn btn-primary btn-lg">Дивитись всі товари</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
 
-
-</div>
 {% endblock %}
