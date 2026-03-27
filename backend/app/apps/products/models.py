@@ -1,8 +1,6 @@
 from apps.core.base_model import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy import String, Integer, ForeignKey, Float, Text
-import uuid
 
 
 class Category(Base):
@@ -19,10 +17,8 @@ class Category(Base):
 class Product(Base):
     title: Mapped[str] = mapped_column(unique=True)
     price: Mapped[int]
-    description: Mapped[str] = mapped_column(default='')
-    uuid_id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, nullable=False)
+    description: Mapped[str] = mapped_column(Text, default='')
     main_image: Mapped[str]
-    images: Mapped[list[str]] = mapped_column(ARRAY(String), default=list)
     stock: Mapped[int] = mapped_column(default=0)
     discount_price: Mapped[int] = mapped_column(nullable=True, default=None)
     category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'), nullable=True)
@@ -38,7 +34,7 @@ class Cart(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     
     user = relationship("User", back_populates="cart")
-    cart_items = relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
+    items = relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
 
 
 class CartItem(Base):
@@ -57,7 +53,7 @@ class Order(Base):
     
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     total_amount: Mapped[float] = mapped_column(Float)
-    status: Mapped[str] = mapped_column(default='pending')  # pending, processing, completed, cancelled
+    status: Mapped[str] = mapped_column(default='pending')
     delivery_address: Mapped[str] = mapped_column(Text)
     phone: Mapped[str] = mapped_column(String(20))
     customer_name: Mapped[str] = mapped_column(String(100))
